@@ -1,0 +1,6 @@
+api.telegram.org
+youtube.com
+play.google.com 
+instagram.com
+tiktok.com
+web.whatsapp.com
