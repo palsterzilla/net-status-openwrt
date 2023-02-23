@@ -10,7 +10,7 @@ stamp() {
 }
 
 SERVER=api.telegram.org
-PORT=443
+PORT="443 80"
 nc -z -v -w5 $SERVER $PORT >/dev/null 2>&1
 result1=$?
 
