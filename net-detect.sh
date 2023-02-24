@@ -25,6 +25,7 @@ if [ "$result1" == 0 ]; then
     /usr/bin/jam.sh time.bmkg.go.id
     sleep 15
     /root/net-status-openwrt/konak.sh # > konak.txt 2>&1
+    /etc/init.d/cloudflared restart
   fi
 
 # if connection FAIL
