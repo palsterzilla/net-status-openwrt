@@ -9,12 +9,6 @@
 TG_CHAT_ID=XXXXX
 TG_TOKEN=XXXX:XXXXXX
 
-# send alive text by bot to user
-curl -s --data "text=Hey I'm UP!" \
-     --data "parse_mode=markdown" \
-     --data "chat_id=${TG_CHAT_ID}" \
-     "https://api.telegram.org/bot${TG_TOKEN}/sendMessage"
-
 # send netcat output by bot to user
 /root/net-status-openwrt/ngecat.sh > /root/net-status-openwrt/ngecek.txt 2>&1
 NGETEXT=$(cat /root/net-status-openwrt/ngecek.txt)
@@ -25,3 +19,9 @@ curl -s --data "text=${NGETEXT}" \
      "https://api.telegram.org/bot${TG_TOKEN}/sendMessage"
 
 rm /root/net-status-openwrt/ngecek.txt
+
+# send alive text by bot to user
+curl -s --data "text=Hey I'm UP!" \
+     --data "parse_mode=markdown" \
+     --data "chat_id=${TG_CHAT_ID}" \
+     "https://api.telegram.org/bot${TG_TOKEN}/sendMessage"
