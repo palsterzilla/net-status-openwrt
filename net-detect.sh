@@ -1,7 +1,24 @@
 #!/bin/bash
-# v2 rev.0
+# v2 rev.1
+# net detector using netcat and vote to determine connection status
 #
 path=/root/net-status-openwrt
+
+ngereset() {
+  result=ERROR
+  until [[ "$result" == *"OK"* ]]
+  do
+    reset=$(echo AT | atinout - /dev/ttyUSB2 -)
+    # echo sebelum: $result
+    if grep -q "$reset" <<< "*OK"; then
+      result=OK
+    elif grep -q "$reset" <<< "*ERROR"; then
+      result=ERROR
+    fi
+    # echo $reset
+    # echo sesudah: $result
+  done
+}
 
 ngecat() {
   nc -z -v -w5 $1 >/dev/null 2>&1
@@ -55,14 +72,14 @@ if test -f "$FILE" && [ $(expr $(date +%s) - $(cat ${path}/stamp)) == 180 ]; the
   # echo 180
   ifdown wan1
   /etc/init.d/openclash restart
-  echo AT+RESET | atinout - /dev/ttyUSB2 - # && sleep 3m && ifdown wan1 && sleep 6 && ifup wan1
+  ngereset
 
 # reset after 7m
 elif test -f "$FILE" && [ $(expr $(date +%s) - $(cat ${path}/stamp)) == 420 ]; then
   # echo 420
   ifdown wan1
   /etc/init.d/openclash restart
-  echo AT+RESET | atinout - /dev/ttyUSB2 -
+  ngereset
 
 # reboot after 12m
 elif test -f "$FILE" && [ $(expr $(date +%s) - $(cat ${path}/stamp)) == 720 ]; then
