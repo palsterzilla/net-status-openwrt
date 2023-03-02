@@ -8,7 +8,7 @@ ngereset() {
   result=ERROR
   until [[ "$result" == *"OK"* ]]
   do
-    reset=$(echo AT | atinout - /dev/ttyUSB2 -)
+    reset=$(echo AT+RESET | atinout - /dev/ttyUSB2 -)
     # echo sebelum: $result
     if grep -q "$reset" <<< "*OK"; then
       result=OK
