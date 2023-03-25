@@ -1,5 +1,5 @@
 #!/bin/bash
-# v2 rev.1
+# v2 rev.2
 # net detector using netcat and vote to determine connection status
 #
 path=/root/net-status-openwrt
@@ -48,8 +48,7 @@ if [ $konek -ge 50 ]; then
     rm ${path}/stamp
     /usr/bin/jam.sh time.bmkg.go.id
     sleep 15
-    ${path}/konak.sh # > konak.txt 2>&1
-    /etc/init.d/cloudflared restart
+    ${path}/konak.sh
   fi
 
 # if connected <50%
@@ -71,14 +70,12 @@ FILE=${path}/stamp
 if test -f "$FILE" && [ $(expr $(date +%s) - $(cat ${path}/stamp)) == 180 ]; then
   # echo 180
   ifdown wan1
-  /etc/init.d/openclash restart
   ngereset
 
 # reset after 7m
 elif test -f "$FILE" && [ $(expr $(date +%s) - $(cat ${path}/stamp)) == 420 ]; then
   # echo 420
   ifdown wan1
-  /etc/init.d/openclash restart
   ngereset
 
 # reboot after 12m
