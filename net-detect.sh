@@ -1,5 +1,5 @@
 #!/bin/bash
-# v3.2
+# v3.3
 # Script for network detection and Telegram messaging
 # Add to cron job
 # example: * * * * * /root/net-status-openwrt/net-detect.sh
@@ -67,22 +67,26 @@ fi
 
 rm ${path}/ngonek.txt
 
-# execute after no connection
-# reset after 1m
+# execute after connection timeout
 FILE=${path}/stamp
-if test -f "$FILE" && [ $(expr $(date +%s) - $(cat ${path}/stamp)) == 60 ]; then
-  ifdown wan1
-  ngereset
+current_time=$(date +%s)
 
-# reset after 4m
-elif test -f "$FILE" && [ $(expr $(date +%s) - $(cat ${path}/stamp)) == 240 ]; then
-  ifdown wan1
-  ngereset
+if test -f "$FILE"; then
+  stamp_time=$(cat ${path}/stamp)
+  elapsed_time=$((current_time - stamp_time))
 
-# reboot after 7m
-elif test -f "$FILE" && [ $(expr $(date +%s) - $(cat ${path}/stamp)) == 420 ]; then
-  rm ${path}/stamp
-  reboot
+  if [ $elapsed_time -ge 60 ] && [ $elapsed_time -lt 120 ]; then
+    ifdown wan1
+    ngereset
+
+  elif [ $elapsed_time -ge 240 ] && [ $elapsed_time -lt 300 ]; then
+    ifdown wan1
+    ngereset
+
+  elif [ $elapsed_time -ge 420 ]; then
+    rm ${path}/stamp
+    reboot
+  fi
 fi
 
 echo $status
